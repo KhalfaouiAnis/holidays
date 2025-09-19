@@ -1,15 +1,26 @@
-import { Container, Header } from "@/components"
+import { Container, Header, LoadingIndicator } from "@/components"
 import BookingItem from "@/components/bookings/booking-item"
-import { BOOKINGS } from "@/core/constants/data"
+import { client } from "@/core/api/client"
+import { useQuery } from "@tanstack/react-query"
 import { FlatList, View } from "react-native"
 
 const Bookings = () => {
+    const { isLoading, data } = useQuery<Booking[]>({
+        queryKey: ['bookings'],
+        queryFn: async () => {
+            const { data } = await client.get('/users/bookings');
+            return data.bookings;
+        },
+    });
+
+    if (isLoading) return <LoadingIndicator />;
+
     return (
         <Container>
             <Header title="Bookings" />
 
             <FlatList
-                data={BOOKINGS}
+                data={data}
                 showsVerticalScrollIndicator={false}
                 ItemSeparatorComponent={() => (
                     <View className="h-4" />

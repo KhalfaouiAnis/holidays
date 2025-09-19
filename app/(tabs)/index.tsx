@@ -5,6 +5,8 @@ import Discovery from "@/components/home/discovery";
 import MainHeader from "@/components/home/main-header";
 import { client } from "@/core/api/client";
 import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useEffect } from "react";
 import { FlatList } from "react-native";
 
 export default function HomeScreen() {
@@ -17,6 +19,14 @@ export default function HomeScreen() {
       return data.properties
     }
   })
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      router.push("/payment-successful")
+    }, 3000)
+
+    return () => clearTimeout(timeout);
+  }, [])
 
   if (!data || isLoading) {
     return <LoadingIndicator />

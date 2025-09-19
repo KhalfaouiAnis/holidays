@@ -1,17 +1,87 @@
-import { ScrollView, View } from 'react-native';
+import { ActivityIndicator, ScrollView, View } from 'react-native';
 
 import { Container, Header, Text } from '@/components';
 import ImageWithSquircle from '@/components/home/image-with-squircle';
+import { client } from '@/core/api/client';
 import useShoppingCartStore from '@/core/store';
 import { PRIMARY } from '@/core/theme/color';
 import { Ionicons } from '@expo/vector-icons';
+import { useStripe } from '@stripe/stripe-react-native';
 import { format } from 'date-fns';
+import { router } from 'expo-router';
 import { SquircleButton, SquircleView } from 'expo-squircle-view';
+import { useState } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { toast } from 'sonner-native';
+
+interface BookingRequest {
+  property_id: string;
+  check_in: string | Date;
+  check_out: string | Date;
+  guest_count: number;
+  special_requests: string;
+}
+
+const formattedDate = (date: Date): string => {
+  return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
+};
 
 const Checkout = () => {
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const { item, getTotalPrice } = useShoppingCartStore()
-  const { bottom } = useSafeAreaInsets()
+  const [isLoading, setIsLoading] = useState(false);
+  const { bottom } = useSafeAreaInsets();
+
+  const onSubmit = async () => {
+    try {
+      if (!item) return;
+
+      setIsLoading(true);
+
+      const bookingData: BookingRequest = {
+        property_id: item.product,
+        check_in: formattedDate(item.startDate as Date),
+        check_out: formattedDate(item.endDate as Date),
+        guest_count: 1,
+        special_requests: '',
+      };
+
+      const response = await client.post<{
+        customerID: string;
+        booking_id: string;
+        ephemeralKey: string;
+        clientSecret: string;
+        paymentIntent: string;
+      }>('/bookings', bookingData);
+
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: 'holidia',
+        customerId: response.data.customerID,
+        customerEphemeralKeySecret: response.data.ephemeralKey,
+        paymentIntentClientSecret: response.data.paymentIntent,
+        allowsDelayedPaymentMethods: true,
+        returnURL: 'holidia://checkout',
+      });
+
+      if (error) {
+        console.log('error');
+        setIsLoading(false);
+      }
+
+      const { error: paymentSheetError } = await presentPaymentSheet();
+
+      if (paymentSheetError) {
+        console.log('error');
+      } else {
+        console.log('payment successful');
+        toast.success('Payment successful');
+        router.push('/payment-successful');
+      }
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
+  };
 
   if (!item) {
     return (
@@ -119,11 +189,16 @@ const Checkout = () => {
         preserveSmoothing
         borderRadius={24}
         backgroundColor={PRIMARY}
+        onPress={onSubmit}
         style={{ position: 'absolute', padding: 16, bottom: bottom * 12, left: 0, right: 0, marginHorizontal: 16, paddingVertical: 16 }}
       >
-        <Text variant="button" className="text-center">
-          Confirm and Pay
-        </Text>
+        {isLoading ? (
+          <ActivityIndicator color='white' />
+        ) : (
+          <Text variant="button" className="text-center">
+            Confirm and Pay
+          </Text>
+        )}
       </SquircleButton>
     </Container>
   );

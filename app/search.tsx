@@ -12,18 +12,18 @@ const Search = () => {
     const [searchQuery, setSearchQuery] = useState("")
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
-    const { data, isLoading } = useQuery<Property[]>({
-        queryKey: ["properties-search"],
+    const { data: properties, isLoading } = useQuery<Property[]>({
+        queryKey: ['properties-search', debouncedSearchQuery],
         queryFn: async () => {
             if (debouncedSearchQuery) {
-                const { data } = await client.get(`/properties/search?city${debouncedSearchQuery}`)
-                return data.properties
+                const { data } = await client.get(`/properties/search?city=${debouncedSearchQuery}`);
+                return data.properties;
             } else {
-                return []
+                return [];
             }
         },
-        staleTime: 1000 * 60
-    })
+        staleTime: 1000 * 60,
+    });
 
     return (
         <Container>
@@ -43,10 +43,10 @@ const Search = () => {
             </View>
 
             <FlatList
-                data={data}
+                data={properties}
                 renderItem={({ item }) => <Card property={item} />}
                 showsVerticalScrollIndicator={false}
-                ListFooterComponent={!data || isLoading ? <LoadingIndicator /> : null}
+                ListFooterComponent={!properties || isLoading ? <LoadingIndicator /> : null}
             />
         </Container>
     );

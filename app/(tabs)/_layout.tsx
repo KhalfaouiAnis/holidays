@@ -15,10 +15,14 @@ export default function TabLayout() {
   }, [])
 
   useEffect(() => {
+    let timeout: number;
     if (status !== "idle") {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         hideSplash()
       }, 1000);
+    }
+    return () => {
+      timeout && clearTimeout(timeout);
     }
   }, [status, hideSplash])
 

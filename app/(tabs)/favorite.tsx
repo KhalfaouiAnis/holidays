@@ -7,7 +7,7 @@ import { useCallback } from "react"
 import { ResponsiveGrid } from "react-native-flexible-grid"
 
 const Favorite = () => {
-    const { data, isLoading, refetch } = useQuery({
+    const { data, isLoading, refetch } = useQuery<Property[]>({
         queryKey: ["favorites"],
         queryFn: async () => {
             const { data } = await client.get("/favorites")
@@ -30,7 +30,7 @@ const Favorite = () => {
         <Container>
             <Header title="Favorite" />
             <ResponsiveGrid
-                data={data as Property[]}
+                data={data}
                 keyExtractor={(item) => item.id}
                 maxItemsPerColumn={2}
                 itemUnitHeight={256}

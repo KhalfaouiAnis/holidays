@@ -17,19 +17,20 @@ import { nanoid } from "nanoid/non-secure";
 import { useCallback, useMemo, useRef } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { toast } from 'sonner-native';
 
 const Property = () => {
     const CustomBottomSheetFlashList = useBottomSheetScrollableCreator();
+
     const { id } = useLocalSearchParams();
 
     const { data: property, isLoading } = useQuery<Property>({
-        queryKey: ["favorites"],
+        queryKey: ['property' + id],
         queryFn: async () => {
-            const { data } = await client.get(`/properties/${id}`)
-
-            return data.favorites
-        }
-    })
+            const { data } = await client.get(`/properties/${id}`);
+            return data.property;
+        },
+    });
 
     const { addItem } = useShoppingCartStore()
     const { bottom } = useSafeAreaInsets()
@@ -220,7 +221,10 @@ const Property = () => {
                     }
                 </Text>
                 <SquircleButton
-                    onPress={() => router.push("/checkout")}
+                    onPress={() => {
+                        toast.success("Property added to cart")
+                        router.push("/checkout")
+                    }}
                     className='flex-grow'
                     backgroundColor={PRIMARY}
                     borderRadius={16}

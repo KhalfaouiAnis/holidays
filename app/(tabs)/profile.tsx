@@ -38,11 +38,9 @@ const Profile = () => {
         }, [refetch])
     )
 
-    if (!data || isLoading) {
+    if (!data || isLoading || !user) {
         return <LoadingIndicator />
     }
-
-    if (!user) return;
 
     return (
         <Container>

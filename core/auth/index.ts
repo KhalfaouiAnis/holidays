@@ -36,7 +36,7 @@ const useAuth = create<AuthState>()(
         if (token) {
           set({ status: "signIn" });
         } else {
-          set({ status: "signOut" });
+          set({ token: null, status: "signOut", user: null });
         }
       },
     }),
@@ -51,3 +51,4 @@ export default useAuth;
 
 export const getToken = () => useAuth.getState().token;
 export const signOut = () => useAuth.getState().signOut();
+export const hydrateAuth = () => useAuth.getState().hydrate();
