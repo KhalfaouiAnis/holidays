@@ -20,7 +20,8 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.aniskhalfaoui.holidays"
+      "package": "com.aniskhalfaoui.holidays",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "output": "static",
@@ -45,6 +46,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7b16557e-435c-410b-8787-b70ebd75f5bd"
+      }
+    },
+    "owner": "aniskhalfaoui"
   }
 }

@@ -44,6 +44,3 @@ app-example
 docker-compose.yml
 .env.development
 .env.production
-
-google-services.json
-google-service-key.json

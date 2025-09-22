@@ -2,27 +2,27 @@ import { Container, Header, LoadingIndicator, Text } from '@/components';
 import AmenitiesList from '@/components/property/amenities-list';
 import PropertyImage from '@/components/property/property-image';
 import { client } from '@/core/api/client';
-import { today } from '@/core/constants';
 import useShoppingCartStore from '@/core/store';
 import { calendarTheme } from '@/core/theme/calendar-theme';
 import { PRIMARY } from '@/core/theme/color';
 import { Ionicons } from '@expo/vector-icons';
-import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, useBottomSheetScrollableCreator } from '@gorhom/bottom-sheet';
-import { Calendar, useDateRange } from "@marceloterreiro/flash-calendar";
+import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
+import { Calendar, fromDateId, toDateId, useDateRange } from "@marceloterreiro/flash-calendar";
 import { useQuery } from '@tanstack/react-query';
-import { differenceInDays } from 'date-fns';
+import { addMonths, differenceInDays, isBefore, isSameMonth, startOfMonth, subMonths } from 'date-fns';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SquircleButton } from 'expo-squircle-view';
 import { nanoid } from "nanoid/non-secure";
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
 const Property = () => {
-    const CustomBottomSheetFlashList = useBottomSheetScrollableCreator();
-
     const { id } = useLocalSearchParams();
+    const today = toDateId(new Date())
+    const [calendarMonthId, setCalendarMonthId] = useState(today)
+
 
     const { data: property, isLoading } = useQuery<Property>({
         queryKey: ['property' + id],
@@ -109,6 +109,22 @@ const Property = () => {
     const days = calculateDays()
     const totalPrice = days * property.price_per_night
 
+    const nextMonth = () => {
+        const month = addMonths(calendarMonthId, 1)
+        setCalendarMonthId(toDateId(month))
+    }
+
+    const currentDisplayMonth = fromDateId(calendarMonthId);
+
+    const canGoBack = !isSameMonth(currentDisplayMonth, today) && !isBefore(currentDisplayMonth, startOfMonth(today));
+
+    const previousMonth = () => {
+        if (canGoBack) {
+            // const month = subMonths(calendarMonthId, 1)
+            setCalendarMonthId(toDateId(subMonths(calendarMonthId, 1)))
+        }
+    }
+
     return (
         <Container>
             <Header title='Property' />
@@ -149,7 +165,7 @@ const Property = () => {
                 enablePanDownToClose
                 enableDynamicSizing={false}
             >
-                <View style={{ flex: 1, padding: 16, position: 'relative' }}>
+                <BottomSheetView style={{ flex: 1 }}>
                     <View className="my-4 flex flex-row items-center justify-between px-4">
                         <View className="flex flex-row items-center justify-center">
                             <Ionicons name='wallet' size={24} color={PRIMARY} />
@@ -159,25 +175,36 @@ const Property = () => {
                             </Text>
                         </View>
                     </View>
-                    <View style={{ flex: 1, paddingHorizontal: 4 }}>
-                        <Calendar.List
+                    <BottomSheetView style={{ flex: 1, paddingHorizontal: 4, position: "relative" }}>
+                        <View className="mt-20 flex flex-row justify-between">
+                            <Pressable
+                                onPress={previousMonth}
+                                disabled={!canGoBack}
+                            >
+                                <Ionicons name='arrow-back' size={24} color={canGoBack ? PRIMARY : 'gray'} /> </Pressable>
+                            <Pressable
+                                onPress={nextMonth}
+                            >
+                                <Ionicons name='arrow-forward' size={24} color={PRIMARY} /></Pressable>
+                        </View>
+                        <Calendar
+                            calendarMonthId={calendarMonthId}
                             calendarActiveDateRanges={calendarActiveDateRanges}
                             calendarMinDateId={today}
-                            theme={calendarTheme}
                             onCalendarDayPress={handleCalendarDayPress}
-                            renderScrollComponent={CustomBottomSheetFlashList}
-                            className='relative'
+                            theme={calendarTheme}
                         />
-                    </View>
+                    </BottomSheetView>
                     <SquircleButton
                         backgroundColor={PRIMARY}
                         cornerSmoothing={100}
                         onPress={handleClose}
                         preserveSmoothing
+                        className='m-8 flex flex-row items-center justify-center px-4'
                         style={{
-                            position: "absolute",
-                            zIndex: 20,
-                            bottom: bottom * 12,
+                            paddingVertical: 16,
+                            position: 'absolute',
+                            bottom: -120,
                             left: 0,
                             right: 0
                         }}
@@ -187,7 +214,7 @@ const Property = () => {
                             Confirm
                         </Text>
                     </SquircleButton>
-                </View>
+                </BottomSheetView>
             </BottomSheet>
 
             <View className="bottom-0 left-0 right-0 -z-10 mx-4 mt-auto flex flex-row items-center justify-center py-2">

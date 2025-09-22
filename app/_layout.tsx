@@ -3,11 +3,11 @@ import { hydrateAuth } from '@/core/auth';
 import theme from '@/core/theme/use-theme-config';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ThemeProvider } from '@react-navigation/native';
-import { StripeProvider, useStripe } from "@stripe/stripe-react-native";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import * as Notifications from "expo-notifications";
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ReactNode, useCallback, useEffect } from 'react';
-import { Linking } from 'react-native';
+import { ReactNode } from 'react';
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { Toaster } from "sonner-native";
@@ -22,43 +22,88 @@ export const unstable_settings = {
 hydrateAuth();
 SplashScreen.preventAutoHideAsync()
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowList: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+  })
+})
+
 const Providers = ({ children }: { children: ReactNode }) => {
-  const { handleURLCallback } = useStripe()
+  // const { handleURLCallback } = useStripe()
+  // const [notifications, setNotifications] = useState<Notifications.Notification>()
 
-  const handleDeeplink = useCallback(async (url: string | null) => {
-    if (!url) return;
+  // const notificationListener = useRef<Notifications.EventSubscription | null>(null)
+  // const responseListener = useRef<Notifications.EventSubscription | null>(null)
 
-    try {
-      const stripeHandled = await handleURLCallback(url);
-      if (stripeHandled) {
-        console.log("handle stripe payment");
-      } else {
+  // useEffect(() => {
 
-      }
-    } catch (error) {
-      console.log({ error });
-    }
-  }, [handleURLCallback])
+  //   const initNotifications = async () => {
+  //     const token = await registerForPushNotificationsAsync();
+  //     if (token) {
+  //       const deviceId = await getDeviceId()
+  //       await axios.post("https://supersimplenotesapi.onrender.com/users/subscription", {
+  //         pushToken: token,
+  //         deviceId
+  //       })
+  //     }
+  //   }
 
-  useEffect(() => {
-    const getInitialURL = async () => {
-      try {
-        const initialURL = await Linking.getInitialURL();
-        await handleDeeplink(initialURL);
-      } catch (error) {
-        console.log({ error });
-      }
-    }
+  //   initNotifications()
 
-    getInitialURL()
+  //   notificationListener.current = Notifications.addNotificationReceivedListener(notification => setNotifications(notification));
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+  //     console.log(response);
+  //   })
 
-    const subscription = Linking.addEventListener("url", (event) => {
-      handleDeeplink(event.url)
-    })
-    return () => {
-      subscription.remove()
-    }
-  }, [handleDeeplink])
+  //   return () => {
+  //     if (notificationListener.current) {
+  //       notificationListener.current.remove()
+  //     }
+  //     if (responseListener.current) {
+  //       responseListener.current.remove()
+  //     }
+
+  //   }
+  // })
+
+  // const handleDeeplink = useCallback(async (url: string | null) => {
+  //   if (!url) return;
+
+  //   try {
+  //     const stripeHandled = await handleURLCallback(url);
+  //     if (stripeHandled) {
+  //       console.log("handle stripe payment");
+  //     } else {
+
+  //     }
+  //   } catch (error) {
+  //     console.log({ error });
+  //   }
+  // }, [handleURLCallback])
+
+  // useEffect(() => {
+  //   const getInitialURL = async () => {
+  //     try {
+  //       const initialURL = await Linking.getInitialURL();
+  //       await handleDeeplink(initialURL);
+  //     } catch (error) {
+  //       console.log({ error });
+  //     }
+  //   }
+
+  //   getInitialURL()
+
+  //   const subscription = Linking.addEventListener("url", (event) => {
+  //     handleDeeplink(event.url)
+  //   })
+
+  //   return () => {
+  //     subscription.remove()
+  //   }
+  // }, [handleDeeplink])
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
