@@ -4,7 +4,6 @@ import theme from '@/core/theme/use-theme-config';
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { ThemeProvider } from '@react-navigation/native';
 import { StripeProvider } from "@stripe/stripe-react-native";
-import * as Notifications from "expo-notifications";
 import { SplashScreen, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ReactNode } from 'react';
@@ -21,15 +20,6 @@ export const unstable_settings = {
 
 hydrateAuth();
 SplashScreen.preventAutoHideAsync()
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowList: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-  })
-})
 
 const Providers = ({ children }: { children: ReactNode }) => {
   // const { handleURLCallback } = useStripe()

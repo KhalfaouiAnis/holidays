@@ -3,44 +3,42 @@ import Container from "@/components/container";
 import Card from "@/components/home/card";
 import Discovery from "@/components/home/discovery";
 import MainHeader from "@/components/home/main-header";
-import { client } from "@/core/api/client";
-import { useQuery } from "@tanstack/react-query";
-import { router } from "expo-router";
-import { useEffect } from "react";
-import { FlatList } from "react-native";
+import { PAGE_SIZE } from "@/core/api/common";
+import useProperties from "@/core/api/feature/properties/use-properties";
+import { PRIMARY } from "@/core/theme/color";
+import { useScrollToTop } from "@react-navigation/native";
+import { useRef } from "react";
+import { FlatList, RefreshControl } from "react-native";
 
 export default function HomeScreen() {
+  const { properties, refetch, hasNextPage, fetchNextPage, isFetchingNextPage, isRefetching, isPending } = useProperties({ pageSize: PAGE_SIZE })
+  const propertiesRef = useRef(null)
+  useScrollToTop(propertiesRef)
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["properties"],
-    queryFn: async () => {
-      const { data } = await client.get("/properties")
-
-      return data.properties
-    }
-  })
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      router.push("/payment-successful")
-    }, 3000)
-
-    return () => clearTimeout(timeout);
-  }, [])
-
-  if (!data || isLoading) {
-    return <LoadingIndicator />
+  const ListFooterComponent = () => {
+    if (isPending || isFetchingNextPage) return <LoadingIndicator />
+    return null
   }
 
   return (
     <Container>
       <MainHeader />
       <FlatList
-        data={data}
-        ListHeaderComponent={() => <Discovery properties={data.reverse()} />}
+        className=""
+        ref={propertiesRef}
+        data={properties}
+        ListHeaderComponent={() => <Discovery />}
         renderItem={({ item }) => (<Card property={item} />)}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage()
+          }
+        }}
+        ListFooterComponent={ListFooterComponent}
+        onEndReachedThreshold={0.5}
+        refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} colors={[PRIMARY]} />}
       />
     </Container>
   );

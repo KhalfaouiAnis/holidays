@@ -1,21 +1,19 @@
 import { Container, Header, LoadingIndicator, Text } from '@/components';
+import Icon from '@/components/Icon';
 import AmenitiesList from '@/components/property/amenities-list';
 import PropertyImage from '@/components/property/property-image';
-import { client } from '@/core/api/client';
+import useProperty from '@/core/api/feature/properties/useProperty';
 import useShoppingCartStore from '@/core/store';
 import { calendarTheme } from '@/core/theme/calendar-theme';
 import { PRIMARY } from '@/core/theme/color';
-import { Ionicons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Calendar, fromDateId, toDateId, useDateRange } from "@marceloterreiro/flash-calendar";
-import { useQuery } from '@tanstack/react-query';
 import { addMonths, differenceInDays, isBefore, isSameMonth, startOfMonth, subMonths } from 'date-fns';
 import { router, useLocalSearchParams } from 'expo-router';
 import { SquircleButton } from 'expo-squircle-view';
 import { nanoid } from "nanoid/non-secure";
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
 const Property = () => {
@@ -23,23 +21,15 @@ const Property = () => {
     const today = toDateId(new Date())
     const [calendarMonthId, setCalendarMonthId] = useState(today)
 
-
-    const { data: property, isLoading } = useQuery<Property>({
-        queryKey: ['property' + id],
-        queryFn: async () => {
-            const { data } = await client.get(`/properties/${id}`);
-            return data.property;
-        },
-    });
+    const { property, isLoading } = useProperty(id)
 
     const { addItem } = useShoppingCartStore()
-    const { bottom } = useSafeAreaInsets()
 
     const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange()
 
     const bottomSheetRef = useRef<BottomSheet>(null)
 
-    const snapPoints = useMemo(() => ['60%'], [])
+    const snapPoints = useMemo(() => ['70%'], [])
 
     const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop {...props}
@@ -95,12 +85,10 @@ const Property = () => {
     // Memoize onCalendarDayPress
     const handleCalendarDayPress = useCallback(
         (dateId: string) => {
-            console.log('onCalendarDayPress called with:', dateId);
             onCalendarDayPress(dateId);
         },
         [onCalendarDayPress]
     );
-
 
     if (!property || isLoading) {
         return <LoadingIndicator />
@@ -139,21 +127,23 @@ const Property = () => {
                         {property.name}
                     </Text>
                     <View className="flex flex-row items-center justify-center">
-                        <Ionicons name='pricetag' size={12} color={PRIMARY} />
+                        <Icon name="pricetag" size={12} />
                         <Text variant='body-primary' className='ml-2'>
                             ${property.price_per_night} per night
                         </Text>
                     </View>
                 </View>
                 <View className="flex flex-row items-center">
-                    <Ionicons name='location' size={16} color={PRIMARY} />
+                    <Icon name="location" size={16} />
                     <Text variant='body-primary'>
-                        {property.city}, {property.country},
+                        {property.city}, {property.country}
                     </Text>
                 </View>
-                <Text variant='body' className='text-gray-700 mt-1'>
-                    {property.description}
-                </Text>
+                <View>
+                    <Text variant='body' className='text-gray-700 mt-1'>
+                        {property.description}
+                    </Text>
+                </View>
                 <AmenitiesList amenitites={property.amenities} />
             </ScrollView>
 
@@ -165,27 +155,27 @@ const Property = () => {
                 enablePanDownToClose
                 enableDynamicSizing={false}
             >
-                <BottomSheetView style={{ flex: 1 }}>
+                <BottomSheetView style={{ flex: 1, position: "relative" }}>
                     <View className="my-4 flex flex-row items-center justify-between px-4">
                         <View className="flex flex-row items-center justify-center">
-                            <Ionicons name='wallet' size={24} color={PRIMARY} />
+                            <Icon name="wallet" size={24} />
                             <Text variant="subtitle-primary" className="mx-4">
                                 Price: ${hasSelectedDates ? totalPrice : property.price_per_night}
                                 {!hasSelectedDates && ' per night'}
                             </Text>
                         </View>
                     </View>
-                    <BottomSheetView style={{ flex: 1, paddingHorizontal: 4, position: "relative" }}>
+                    <BottomSheetView style={{ flex: 1, paddingHorizontal: 4 }}>
                         <View className="mt-20 flex flex-row justify-between">
                             <Pressable
                                 onPress={previousMonth}
                                 disabled={!canGoBack}
                             >
-                                <Ionicons name='arrow-back' size={24} color={canGoBack ? PRIMARY : 'gray'} /> </Pressable>
-                            <Pressable
-                                onPress={nextMonth}
-                            >
-                                <Ionicons name='arrow-forward' size={24} color={PRIMARY} /></Pressable>
+                                <Icon name="arrow-back" disabled={!canGoBack} size={40} />
+                            </Pressable>
+                            <Pressable onPress={nextMonth}>
+                                <Icon name="arrow-forward" size={24} />
+                            </Pressable>
                         </View>
                         <Calendar
                             calendarMonthId={calendarMonthId}
@@ -200,16 +190,16 @@ const Property = () => {
                         cornerSmoothing={100}
                         onPress={handleClose}
                         preserveSmoothing
-                        className='m-8 flex flex-row items-center justify-center px-4'
+                        className='m-8 flex flex-row items-center justify-center'
                         style={{
                             paddingVertical: 16,
                             position: 'absolute',
-                            bottom: -120,
+                            bottom: -400,
                             left: 0,
-                            right: 0
+                            right: 0,
                         }}
                     >
-                        <Ionicons name="checkmark-circle" size={20} color="white" />
+                        <Icon name="checkmark-circle" size={20} />
                         <Text variant="button" className="mx-2 text-center">
                             Confirm
                         </Text>
@@ -225,24 +215,28 @@ const Property = () => {
                             onPress={handleExpand}
                         >
                             <View className="flex flex-row items-center">
-                                <Ionicons name='pricetag' color={PRIMARY} size={16} />
+                                <Icon name='pricetag' size={16} />
                                 <Text variant="body-primary" className="text-center">
                                     {totalPrice}
                                 </Text>
                             </View>
-                            <Text variant="caption" className="text-center underline">
-                                {days === 1 ? '1 Night' : `${days} nights`}
-                            </Text>
+                            <View>
+                                <Text variant="caption" className="text-center underline">
+                                    {days === 1 ? '1 Night' : `${days} nights`}
+                                </Text>
+                            </View>
                         </Pressable>)
                         :
                         (
                             <Pressable className='mr-4 flex flex-row items-center'
                                 onPress={handleExpand}
                             >
-                                <Ionicons name='calendar-outline' size={24} color={PRIMARY} />
-                                <Text variant="body-primary" className="text-center underline ml-2">
-                                    Select dates
-                                </Text>
+                                <Icon name='calendar-outline' size={24} />
+                                <View>
+                                    <Text variant="body-primary" className="text-center underline ml-2">
+                                        Select dates
+                                    </Text>
+                                </View>
                             </Pressable>
                         )
                     }

@@ -2,16 +2,15 @@ import { ActivityIndicator, ScrollView, View } from 'react-native';
 
 import { Container, Header, Text } from '@/components';
 import ImageWithSquircle from '@/components/home/image-with-squircle';
+import Icon from '@/components/Icon';
 import { client } from '@/core/api/client';
 import useShoppingCartStore from '@/core/store';
 import { PRIMARY } from '@/core/theme/color';
-import { Ionicons } from '@expo/vector-icons';
 import { useStripe } from '@stripe/stripe-react-native';
 import { format } from 'date-fns';
 import { router } from 'expo-router';
 import { SquircleButton, SquircleView } from 'expo-squircle-view';
 import { useState } from 'react';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { toast } from 'sonner-native';
 
 interface BookingRequest {
@@ -30,7 +29,6 @@ const Checkout = () => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const { item, getTotalPrice } = useShoppingCartStore()
   const [isLoading, setIsLoading] = useState(false);
-  const { bottom } = useSafeAreaInsets();
 
   const onSubmit = async () => {
     try {
@@ -132,7 +130,7 @@ const Checkout = () => {
                 Dates
               </Text>
               <View className="flex flex-row items-center">
-                <Ionicons name='calendar-outline' size={20} className='mr-2' />
+                <Icon name='calendar-outline' size={20} className='mr-2' />
                 <Text variant="body" className="text-center">
                   {format(new Date(item.startDate), 'EEE, MMM d')} {" - "}
                   {format(new Date(item.endDate), 'EEE, MMM d, yyyy')}
@@ -184,22 +182,24 @@ const Checkout = () => {
           </SquircleView>
         </View>
       </ScrollView>
-      <SquircleButton
-        cornerSmoothing={100}
-        preserveSmoothing
-        borderRadius={24}
-        backgroundColor={PRIMARY}
-        onPress={onSubmit}
-        style={{ position: 'absolute', padding: 16, bottom: bottom * 12, left: 0, right: 0, marginHorizontal: 16, paddingVertical: 16 }}
-      >
-        {isLoading ? (
-          <ActivityIndicator color='white' />
-        ) : (
-          <Text variant="button" className="text-center">
-            Confirm and Pay
-          </Text>
-        )}
-      </SquircleButton>
+      <View className='relative'>
+        <SquircleButton
+          cornerSmoothing={100}
+          preserveSmoothing
+          borderRadius={24}
+          backgroundColor={PRIMARY}
+          onPress={onSubmit}
+          style={{ position: 'absolute', padding: 16, bottom: 0, left: 0, right: 0, marginHorizontal: 16, paddingVertical: 16 }}
+        >
+          {isLoading ? (
+            <ActivityIndicator color='white' />
+          ) : (
+            <Text variant="button" className="text-center">
+              Confirm and Pay
+            </Text>
+          )}
+        </SquircleButton>
+      </View>
     </Container>
   );
 };

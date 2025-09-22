@@ -1,21 +1,17 @@
-import { PRIMARY } from "@/core/theme/color";
-import { Ionicons } from "@expo/vector-icons";
 import { Image } from 'expo-image';
 import { View } from "react-native";
 
 const MainHeader = () => {
     return (
-        <View className="px-4 pb-4">
+        <View className="px-4 pb-4 mt-6">
             <View className="flex flex-row items-center justify-between">
-                <Image source={require('../../assets/images/logo.png')}
+                <Image source={require('../../assets/images/holidays.svg')}
                     style={{
                         height: 20,
-                        width: 88
+                        width: 80
                     }}
-                    contentFit='contain'
-
+                    contentFit='fill'
                 />
-                <Ionicons name="sparkles" size={24} color={PRIMARY} />
             </View>
         </View>
     )

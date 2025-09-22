@@ -21,7 +21,7 @@ const variantStyles: Record<TypographyVariant, string> = {
 }
 
 const Text = ({ variant = "body", children, className, ...props }: TextComponentProps) => {
-    const textStyle = twMerge("text-black", variantStyles[variant], className)
+    const textStyle = twMerge("text-black dark:text-white", variantStyles[variant], className)
 
     return <RnText className={textStyle} {...props}>
         {children}

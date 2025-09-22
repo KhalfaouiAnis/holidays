@@ -2,8 +2,8 @@ import { Pressable, View } from 'react-native';
 
 import { Text } from '@/components';
 import { WIDTH } from '@/core/utils/layout';
-import { Ionicons } from '@expo/vector-icons';
 import ImageWithSquircle from '../home/image-with-squircle';
+import Icon from '../Icon';
 
 type Props = {
     property: Property
@@ -20,7 +20,7 @@ const Card = ({ property }: Props) => {
                     />
                 </View>
                 <View className='absolute right-6 top-6'>
-                    <Ionicons name={property.is_favorite ? "heart" : "heart-outline"} size={24} color={"white"} />
+                    <Icon name={property.is_favorite ? "heart" : "heart-outline"} size={24} />
                 </View>
             </View>
             <View className='px-2'>

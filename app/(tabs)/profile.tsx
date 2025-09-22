@@ -1,9 +1,8 @@
 import { Container, Header, LoadingIndicator, Text } from "@/components"
 import ImageWithSquircle from "@/components/home/image-with-squircle"
+import Icon from "@/components/Icon"
 import { client } from "@/core/api/client"
 import useAuth from "@/core/auth"
-import { PRIMARY } from "@/core/theme/color"
-import { Ionicons } from "@expo/vector-icons"
 import { useQuery } from "@tanstack/react-query"
 import { useFocusEffect } from "expo-router"
 import { SquircleView } from "expo-squircle-view"
@@ -15,8 +14,8 @@ type UserStat = {
     name: string,
     username: string,
     avatar: string,
-    favorite_properties_count: number,
-    bookings_count: number
+    favoriteCount: number,
+    bookingsCount: number
 }
 
 const Profile = () => {
@@ -27,7 +26,6 @@ const Profile = () => {
         queryKey: ["stats"],
         queryFn: async () => {
             const { data } = await client.get("/users/stats")
-
             return data.stats
         }
     })
@@ -62,29 +60,29 @@ const Profile = () => {
             >
                 <View>
                     <View className="flex flex-row items-center justify-center p-8 bg-gray-800 rounded-xl">
-                        <Ionicons name="stats-chart" color={PRIMARY} size={40} />
+                        <Icon name="stats-chart" size={40} />
                     </View>
                     <View className="mt-4 flex flex-row items-center justify-center">
                         <Text variant="body" className="text-center">Trips</Text>
-                        <Text variant="body" className="mx-4 text-center">4</Text>
+                        <Text variant="body" className="mx-4 text-center">{data.bookingsCount}</Text>
                     </View>
                 </View>
                 <View>
                     <View className="flex flex-row items-center justify-center p-8 bg-gray-800 rounded-xl">
-                        <Ionicons name="heart" color={PRIMARY} size={40} />
+                        <Icon name="heart" size={40} />
                     </View>
                     <View className="mt-4 flex flex-row items-center justify-center">
                         <Text variant="body" className="text-center">Favorite</Text>
-                        <Text variant="body" className="mx-4 text-center">{data.favorite_properties_count}</Text>
+                        <Text variant="body" className="mx-4 text-center">{data.favoriteCount}</Text>
                     </View>
                 </View>
                 <View>
                     <View className="flex flex-row items-center justify-center p-8 bg-gray-800 rounded-xl">
-                        <Ionicons name="albums" color={PRIMARY} size={40} />
+                        <Icon name="albums" size={40} />
                     </View>
                     <View className="mt-4 flex flex-row items-center justify-center">
                         <Text variant="body" className="text-center">Albums</Text>
-                        <Text variant="body" className="mx-4 text-center">{data.bookings_count}</Text>
+                        <Text variant="body" className="mx-4 text-center">{data.bookingsCount}</Text>
                     </View>
                 </View>
             </SquircleView>

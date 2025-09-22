@@ -1,12 +1,20 @@
-import { client } from '@/core/api/client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { client } from "@/core/api/client";
+import { PAGE_SIZE } from "@/core/api/common";
+import {
+  InfiniteData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 type ToggleFavoriteParams = {
   propertyId: string;
   currentFavoriteStatus: boolean;
 };
 
-export const useToggleFavorite = () => {
+export const useToggleFavorite = (
+  onSuccess?: () => void,
+  onFailure?: () => void
+) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -14,42 +22,64 @@ export const useToggleFavorite = () => {
       const { data } = await client.post(`/favorites/${propertyId}`);
       return data;
     },
-    onMutate: async ({ currentFavoriteStatus, propertyId }: ToggleFavoriteParams) => {
+    onMutate: async ({
+      currentFavoriteStatus,
+      propertyId,
+    }: ToggleFavoriteParams) => {
+      const queryKey = ["propertie", PAGE_SIZE];
       await queryClient.cancelQueries({
-        queryKey: ['properties'],
+        queryKey,
       });
 
-      const previousProperties = queryClient.getQueryData<Property[]>(['properties']);
-      
-      queryClient.setQueryData<Property[]>(['properties'], (old) => {
-        if (!old) {
-          return [];
-        }
-        return old.map((property) => {
-          if (property.id === propertyId) {
-            return {
-              ...property,
-              is_favorite: !currentFavoriteStatus,
-            };
+      const previousData =
+        queryClient.getQueryData<InfiniteData<PagedResult<Property>>>(queryKey);
+
+      queryClient.setQueryData<InfiniteData<PagedResult<Property>>>(
+        queryKey,
+        (old) => {
+          if (!old) {
+            return old;
           }
-          return property;
-        });
-      });
+          return {
+            ...old,
+            pages: old.pages.map((page) => ({
+              ...page,
+              properties: page.data.map((property) => {
+                if (property.id === propertyId) {
+                  return {
+                    ...property,
+                    is_favorite: !currentFavoriteStatus,
+                  };
+                }
+                return property;
+              }),
+            })),
+          };
+        }
+      );
       return {
-        previousProperties,
+        previousData,
+        queryKey,
       };
     },
 
     onError: (err, variables, context) => {
-      if (context?.previousProperties) {
-        queryClient.setQueryData(['properties'], context.previousProperties);
+      if (context?.previousData && context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+        typeof onFailure === "function" && onFailure();
       }
     },
 
-    onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['properties'],
-      });
+    onSuccess: () => {
+      typeof onSuccess === "function" && onSuccess();
+    },
+
+    onSettled: (data, error, variables, context) => {
+      if (context?.queryKey) {
+        queryClient.invalidateQueries({
+          queryKey: context.queryKey,
+        });
+      }
     },
   });
 };

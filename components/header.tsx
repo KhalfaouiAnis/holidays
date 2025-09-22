@@ -2,6 +2,7 @@ import { Pressable, View } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import Icon from './Icon';
 import Text from './text';
 
 type Props = {
@@ -22,14 +23,14 @@ const Header = ({ title, headerAction }: Props) => {
         <View className='mb-4 flex flex-row items-center justify-between px-2'>
             <View className='flex flex-row items-center justify-center'>
                 <Pressable onPress={onBack}>
-                    <Ionicons name='arrow-back' size={24} />
+                    <Icon name='arrow-back' size={24} />
                 </Pressable>
                 <Text variant='subtitle' className='mx-2 text-center'>{title}</Text>
             </View>
             {
                 headerAction && (
                     <Pressable onPress={headerAction.onPress} >
-                        <Ionicons name={headerAction.name} size={24} />
+                        <Icon name={headerAction.name} size={24} />
                     </Pressable>
                 )
             }

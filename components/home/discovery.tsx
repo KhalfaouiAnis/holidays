@@ -1,47 +1,48 @@
 import { Text } from "@/components"
-import { Ionicons } from "@expo/vector-icons"
+import { PAGE_SIZE } from "@/core/api/common"
+import useFeaturedProperties from "@/core/api/feature/properties/use-featured-properties"
+import { PRIMARY } from "@/core/theme/color"
 import { BlurView } from "expo-blur"
 import { router } from "expo-router"
-import { SquircleButton, SquircleView } from "expo-squircle-view"
-import { FlatList, Pressable, View } from "react-native"
+import { SquircleView } from "expo-squircle-view"
+import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from "react-native"
+import Icon from "../Icon"
 import ImageWithSquircle from "./image-with-squircle"
 
-type DiscoveryProps = {
-    properties: Property[]
-}
+const Discovery = () => {
+    const { featuredProperties, isFetchingNextPage, isRefetching, hasNextPage, fetchNextPage, isPending, refetch } = useFeaturedProperties({ pageSize: PAGE_SIZE })
 
-const Discovery = ({ properties }: DiscoveryProps) => {
+    const ListFooterComponent = () => {
+        if (isPending || isFetchingNextPage) {
+            return <View className="w-[324px] h-[124px] flex items-center justify-center">
+                <ActivityIndicator size={40} color={PRIMARY} />
+            </View>
+        }
+        return null
+    }
+
     return (
         <>
-            <SquircleButton
-                className="mx-4 mb-4 flex flex-row items-center"
-                backgroundColor="lightgray"
-                borderRadius={16}
-                cornerSmoothing={100}
-                preserveSmoothing
-                style={{
-                    paddingVertical: 16,
-                    paddingHorizontal: 24
-                }}
-                onPress={() => router.navigate("/search")}
-            >
-                <Ionicons name="search" size={24} color={"gray"} />
-                <View className="mx-4">
-                    <Text className="text-gray-400">Where to?</Text>
+            <Pressable onPress={() => router.navigate("/search")}>
+                <View className='mx-4 rounded-xl bg-gray-100 px-4 py-3 flex flex-row items-center justify-center mb-4'>
+                    <View className='flex flex-row items-center justify-center py-3'>
+                        <Icon name="search" size={20} />
+                        <Text className="ml-2 flex-1 dark:text-gray-950">Where to go?</Text>
+                    </View>
                 </View>
-            </SquircleButton>
+            </Pressable>
             <FlatList
                 horizontal
-                data={properties.reverse()}
+                data={featuredProperties}
                 keyExtractor={item => item.id}
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
                     <SquircleView className="mx-2">
-                        <ImageWithSquircle image={item.images[1]} width={196} height={224} />
+                        <ImageWithSquircle image={item.images[0]} width={196} height={224} />
                         <SquircleView
                             cornerSmoothing={100}
                             preserveSmoothing
-                            borderRadius={24}
+                            borderRadius={16}
                             style={{
                                 overflow: 'hidden',
                                 position: "absolute",
@@ -69,12 +70,20 @@ const Discovery = ({ properties }: DiscoveryProps) => {
                                             from ${item.price_per_night}
                                         </Text>
                                     </View>
-                                    <Ionicons name="arrow-forward-outline" size={16} color={"white"} />
+                                    <Icon name="arrow-forward-outline" size={16} />
                                 </Pressable>
                             </BlurView>
                         </SquircleView>
                     </SquircleView>
                 )}
+                onEndReached={() => {
+                    if (hasNextPage) {
+                        fetchNextPage()
+                    }
+                }}
+                ListFooterComponent={ListFooterComponent}
+                onEndReachedThreshold={0.5}
+                refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} colors={[PRIMARY]} />}
             />
         </>
     )

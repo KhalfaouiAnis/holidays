@@ -1,5 +1,5 @@
 import { Container, Text } from '@/components';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import Icon from '@/components/Icon';
 import { router } from 'expo-router';
 import { SquircleButton } from 'expo-squircle-view';
 import { MotiView } from 'moti';
@@ -28,7 +28,7 @@ const PaymentSuccessful = () => {
           }}>
           <View className="flex h-24 w-24 flex-row items-center justify-center rounded-full bg-green-100 ">
             <View className="h-20 w-20 items-center justify-center rounded-full bg-green-600">
-              <Ionicons name="checkmark" size={40} color={'white'} />
+              <Icon name="checkmark" size={40} />
             </View>
           </View>
         </MotiView>

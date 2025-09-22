@@ -17,6 +17,7 @@ interface Property {
   longitude_delta: number;
   is_favorite: boolean;
   rating?: number;
+  featured?: boolean;
 }
 
 interface User {
@@ -61,3 +62,16 @@ interface ICartItem {
   image: string;
   property?: Property;
 }
+
+type PagedResult<T> = {
+  data: T[];
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalCount: number;
+};
+
+type PaginationParams = {
+  page: number;
+  pageSize: number;
+};

@@ -1,10 +1,10 @@
 import { Image, Text } from '@/components';
 import { useImageColors } from '@/hooks/use-image-colors';
-import { Ionicons } from '@expo/vector-icons';
 import { format } from "date-fns";
 import { BlurView } from 'expo-blur';
 import { SquircleView } from 'expo-squircle-view';
 import { View } from 'react-native';
+import Icon from '../Icon';
 
 type Props = {
     booking: Booking
@@ -38,7 +38,6 @@ const CalendarDate = ({ date = new Date() }) => {
 }
 
 const BookingItem = ({ booking }: Props) => {
-
     const { colors } = useImageColors(booking.property.images[0])
 
     return (
@@ -87,7 +86,7 @@ const BookingItem = ({ booking }: Props) => {
                     />
 
                     <View className='flex flex-row items-center'>
-                        <Ionicons name='location' size={16} color={"white"} />
+                        <Icon name="location" size={16} />
                         <Text className='mx-2 text-white' variant='body'>
                             {booking.property.name},{booking.property.city},{booking.property.country}
                         </Text>

@@ -1,7 +1,7 @@
 import { Text } from '@/components';
-import { PRIMARY } from '@/core/theme/color';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
+import Icon from '../Icon';
 
 export type AmenityType =
     | 'WiFi'
@@ -34,7 +34,7 @@ const AmenitiesList = ({ amenitites }: Props) => {
                 allAmenities.map((amenity, index) => {
                     return (
                         <View key={index} className="mx-2 flex flex-1 items-center justify-center rounded-2xl bg-white p-2" >
-                            <Ionicons name={amenityIcon[amenity]} size={24} color={PRIMARY} />
+                            <Icon name={amenityIcon[amenity]} size={24} />
                             <Text variant="body-primary" className="mt-2 text-center">
                                 {amenity}
                             </Text>
