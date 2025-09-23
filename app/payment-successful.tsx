@@ -1,5 +1,5 @@
 import { Container, Text } from '@/components';
-import Icon from '@/components/Icon';
+import Icon from '@/components/shared/Icon';
 import { router } from 'expo-router';
 import { SquircleButton } from 'expo-squircle-view';
 import { MotiView } from 'moti';

@@ -1,47 +1,32 @@
 import { Container, Header, Text } from '@/components';
-import { client } from '@/core/api/client';
-import useAuth from '@/core/auth';
 import { PRIMARY } from '@/core/theme/color';
+import { useLogin } from '@/hooks/app/use-auth-logic';
 import { Image } from 'expo-image';
-import { router } from 'expo-router';
 import { SquircleButton } from 'expo-squircle-view';
-import { useState } from 'react';
 import { ActivityIndicator, TextInput, View } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 
 const Login = () => {
-    const [loading, setLoading] = useState(false);
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const { signIn, setUser } = useAuth()
-
-    const handleSignin = async () => {
-        setLoading(true)
-        try {
-            const resqonse = await client.post("users/login", {
-                email, password
-            })
-            setUser(resqonse.data.user)
-            signIn({ access: resqonse.data.token })
-            setLoading(false)
-            router.push("/")
-        } catch (error) {
-            console.log({ error });
-            setLoading(false)
-        }
-    }
+    const {
+        email,
+        password,
+        loading,
+        setEmail,
+        setPassword,
+        handleLogin,
+    } = useLogin()
 
     return (
         <Container>
             <KeyboardAvoidingView
-                style={{flex: 1}}
+                style={{ flex: 1 }}
                 behavior='padding'
                 keyboardVerticalOffset={4}
             >
                 <Header title='Login' />
                 <View className="flex-1 px-4">
                     <View className="flex flex-row items-center justify-center mt-24">
-                        <Image source={require("../assets/images/logo.png")}
+                        <Image source={require("../assets/images/holidays.svg")}
                             style={{
                                 height: 40,
                                 width: 176
@@ -62,20 +47,19 @@ const Login = () => {
                         value={password} onChangeText={setPassword}
                         className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Password'
                     />
-
                     <SquircleButton
                         className='mt-auto'
                         preserveSmoothing
                         cornerSmoothing={100}
                         borderRadius={16}
-                        onPress={handleSignin}
+                        onPress={handleLogin}
                         style={{
                             backgroundColor: PRIMARY,
                             paddingVertical: 16
                         }}
                     >
                         <Text variant="button" className="text-center">
-                            {loading ? <ActivityIndicator color={"white"} /> : "Sign In"}
+                            {loading ? <ActivityIndicator color="white" /> : "Sign In"}
                         </Text>
                     </SquircleButton>
                 </View>

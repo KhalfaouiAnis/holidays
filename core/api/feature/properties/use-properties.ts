@@ -1,3 +1,4 @@
+import { queryKeys } from "@/constants";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { listProperties } from ".";
 
@@ -18,7 +19,7 @@ const useProperties = ({ pageSize }: PropertiesOptions) => {
     error,
     refetch
   } = useInfiniteQuery({
-    queryKey: ["properties", pageSize],
+    queryKey: queryKeys.PROPERTIES,
     queryFn: ({ pageParam }) =>
       listProperties({
         page: pageParam,

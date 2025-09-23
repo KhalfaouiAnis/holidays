@@ -1,3 +1,4 @@
+import { queryKeys } from "@/constants";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { listBookings } from ".";
 
@@ -18,7 +19,7 @@ const useBookings = ({ pageSize }: BookingsOptions) => {
     error,
     refetch,
   } = useInfiniteQuery({
-    queryKey: ["bookings", pageSize],
+    queryKey: queryKeys.BOOKINGS,
     queryFn: ({ pageParam }) =>
       listBookings({
         page: pageParam,

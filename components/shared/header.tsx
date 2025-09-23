@@ -1,7 +1,6 @@
-import { Pressable, View } from 'react-native';
-
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { Pressable, View } from 'react-native';
 import Icon from './Icon';
 import Text from './text';
 
@@ -14,7 +13,6 @@ type Props = {
 };
 
 const Header = ({ title, headerAction }: Props) => {
-
     const onBack = () => {
         router.back()
     }

@@ -1,5 +1,4 @@
-import { Container, Header, LoadingIndicator } from "@/components"
-import BookingItem from "@/components/bookings/booking-item"
+import { BookingItem, Container, Header, LoadingIndicator } from "@/components"
 import useBookings from "@/core/api/feature/bookings/use-bookings"
 import { PRIMARY } from "@/core/theme/color"
 import { useScrollToTop } from "@react-navigation/native"
@@ -8,9 +7,7 @@ import { useRef } from "react"
 import { FlatList, RefreshControl, Text, View } from "react-native"
 
 const Bookings = () => {
-
     const { bookings, isPending, isFetchingNextPage, hasNextPage, refetch, isRefetching, fetchNextPage } = useBookings({ pageSize: 3 })
-
     const bookingsRef = useRef(null)
     useScrollToTop(bookingsRef)
 

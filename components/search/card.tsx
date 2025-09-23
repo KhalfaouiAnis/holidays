@@ -1,9 +1,7 @@
 import { Pressable, View } from 'react-native';
 
-import { Text } from '@/components';
+import { Icon, ImageWithSquircle, Text } from '@/components';
 import { WIDTH } from '@/core/utils/layout';
-import ImageWithSquircle from '../home/image-with-squircle';
-import Icon from '../Icon';
 
 type Props = {
     property: Property

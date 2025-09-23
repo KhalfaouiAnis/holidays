@@ -1,51 +1,19 @@
-import { Text } from "@/components";
-import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
-import { useToggleRate } from "@/hooks/use-toggle-rate";
+import { CarouselItem, Text } from "@/components";
 import { BlurView } from "expo-blur";
-import { router } from "expo-router";
 import { Pressable, View } from "react-native";
-import { toast } from "sonner-native";
-import Icon from "../Icon";
-import CarouselItem from "./carousel-item";
+import Icon from "../shared/Icon";
+import { useCardActionHandlers } from "./logic/use-card-action-handlers";
 
 type CardProps = {
     property: Property
 }
 
 const Card = ({ property }: CardProps) => {
-    const onFavoriteSuccess = () => toast.success("Added to favories")
-    const onFavoriteFailure = () => toast.error("Failed to add to favories")
-
-    const onRateSettled = () => toast.success("Rate considered, thank you")
-
-    const togglefavorite = useToggleFavorite(onFavoriteSuccess, onFavoriteFailure);
-    const toggleRate = useToggleRate(onRateSettled)
-
-    const toggleFavoriteHandler = () => {
-        togglefavorite.mutate({
-            propertyId: property.id,
-            currentFavoriteStatus: property.is_favorite,
-        })
-    }
-
-    const toggleRateHandler = () => {
-        toggleRate.mutate({
-            propertyId: property.id,
-        })
-    }
+    const { toggleFavoriteHandler, toggleRateHandler, onPress } = useCardActionHandlers(property.id, property.is_favorite)
 
     return (
         <View className="border-t-[1px] dark:border-gray-800 border-gray-200 px-4 py-4 relative">
-            <Pressable
-                onPress={() => {
-                    router.push({
-                        pathname: "/properties/[id]",
-                        params: {
-                            id: property.id
-                        }
-                    })
-                }}
-            >
+            <Pressable onPress={onPress}            >
                 <CarouselItem property={property} />
             </Pressable>
             <View>

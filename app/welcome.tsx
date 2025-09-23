@@ -10,7 +10,7 @@ const Welcome = () => {
         <Container>
             <View className="flex items-center justify-center flex-1 px-4">
                 <View className="flex flex-1 items-center justify-center">
-                    <Image source={require("../assets/images/logo.png")}
+                    <Image source={require("../assets/images/holidays.svg")}
                         style={{
                             height: 40,
                             width: 176,

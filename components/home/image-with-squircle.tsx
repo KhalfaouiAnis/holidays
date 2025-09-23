@@ -13,6 +13,7 @@ const ImageWithSquircle = ({ image, borderRadius = 40, width = 296, height = 280
 
     return (
         <Squircle
+            borderRadius={borderRadius}
             style={{
                 width,
                 height,
@@ -24,7 +25,6 @@ const ImageWithSquircle = ({ image, borderRadius = 40, width = 296, height = 280
                 image={imageUrl}
                 fit={"cover"}
             />}
-            borderRadius={borderRadius}
         />
     )
 }

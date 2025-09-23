@@ -1,5 +1,5 @@
+import { queryKeys } from "@/constants";
 import { client } from "@/core/api/client";
-import { PAGE_SIZE } from "@/core/api/common";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useToggleRate = (onRateSettled?: () => void) => {
@@ -13,7 +13,7 @@ export const useToggleRate = (onRateSettled?: () => void) => {
     onSettled: () => {
       typeof onRateSettled === "function" && onRateSettled();
       queryClient.invalidateQueries({
-        queryKey: ["properties", PAGE_SIZE],
+        queryKey: queryKeys.PROPERTIES,
       });
     },
   });

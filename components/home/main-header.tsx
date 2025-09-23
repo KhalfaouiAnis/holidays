@@ -6,11 +6,11 @@ const MainHeader = () => {
         <View className="px-4 pb-4 mt-6">
             <View className="flex flex-row items-center justify-between">
                 <Image source={require('../../assets/images/holidays.svg')}
+                    contentFit='fill'
                     style={{
                         height: 20,
                         width: 80
                     }}
-                    contentFit='fill'
                 />
             </View>
         </View>

@@ -1,18 +1,11 @@
 import { View } from 'react-native';
 
-import { Text } from '@/components';
+import { Icon, ImageWithSquircle, Text } from '@/components';
 import { WIDTH } from '@/core/utils/layout';
 import { BlurView } from 'expo-blur';
-import ImageWithSquircle from '../home/image-with-squircle';
-import Icon from '../Icon';
+import { PropertyImageProps } from './property.types';
 
-type Props = {
-    imageUrl: string,
-    rating?: number,
-    isFavorite: boolean
-};
-
-const PropertyImage = ({ imageUrl, rating = 0, isFavorite }: Props) => {
+const PropertyImage = ({ imageUrl, rating = 0, isFavorite }: PropertyImageProps) => {
     return (
         <View className='relative'>
             <View className='flex flex-row items-center justify-center'>

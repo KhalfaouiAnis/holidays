@@ -7,25 +7,28 @@ type Props = {
     size?: number
     className?: string
     disabled?: boolean
+    color?: string
 }
 
 const Icon = ({
     name,
     size,
     className,
-    disabled
+    disabled,
+    color
 }: Props) => {
     const colorScheme = useColorScheme();
-    const color = getIconColor(name, Colors[colorScheme ?? 'light'].icon, disabled)
+    const finalColor = getIconColor(name, Colors[colorScheme ?? 'light'].icon, color, disabled)
 
-    return <Ionicons name={name} size={size} color={color} className={className} />
+    return <Ionicons name={name} size={size} color={finalColor} className={className} />
 }
 
 export default Icon;
 
-function getIconColor(name: string, defaultColor: string, disabled?: boolean) {
+function getIconColor(name: string, themeColor: string, color?: string, disabled?: boolean) {
+    if (color) return color;
     if (name === "star") return "#facc15"
     if (name === "heart-outline" || name === "heart") return "#ef4444"
     if (disabled) return "gray"
-    return defaultColor;
+    return themeColor;
 }

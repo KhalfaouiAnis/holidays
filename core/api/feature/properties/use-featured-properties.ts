@@ -1,3 +1,4 @@
+import { queryKeys } from "@/constants";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { listFeaturedProperties } from ".";
 
@@ -15,7 +16,7 @@ const useFeaturedProperties = ({ pageSize }: PropertiesOptions) => {
     refetch,
     isPending,
   } = useInfiniteQuery({
-    queryKey: ["featured-properties", pageSize],
+    queryKey: queryKeys.FEATURED_PROPERTIES,
     queryFn: ({ pageParam }) =>
       listFeaturedProperties({
         page: pageParam,

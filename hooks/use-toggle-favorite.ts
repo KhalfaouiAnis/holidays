@@ -1,5 +1,5 @@
+import { queryKeys } from "@/constants";
 import { client } from "@/core/api/client";
-import { PAGE_SIZE } from "@/core/api/common";
 import {
   InfiniteData,
   useMutation,
@@ -26,7 +26,7 @@ export const useToggleFavorite = (
       currentFavoriteStatus,
       propertyId,
     }: ToggleFavoriteParams) => {
-      const queryKey = ["propertie", PAGE_SIZE];
+      const queryKey = queryKeys.PROPERTIES;
       await queryClient.cancelQueries({
         queryKey,
       });
@@ -77,7 +77,7 @@ export const useToggleFavorite = (
     onSettled: (data, error, variables, context) => {
       if (context?.queryKey) {
         queryClient.invalidateQueries({
-          queryKey: ["properties", PAGE_SIZE],
+          queryKey: queryKeys.PROPERTIES,
         });
       }
     },

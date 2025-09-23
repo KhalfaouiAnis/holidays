@@ -1,8 +1,4 @@
-import { LoadingIndicator } from "@/components";
-import Container from "@/components/container";
-import Card from "@/components/home/card";
-import Discovery from "@/components/home/discovery";
-import MainHeader from "@/components/home/main-header";
+import { Container, Discovery, HomeCard, LoadingIndicator, MainHeader } from "@/components";
 import { PAGE_SIZE } from "@/core/api/common";
 import useProperties from "@/core/api/feature/properties/use-properties";
 import { PRIMARY } from "@/core/theme/color";
@@ -27,7 +23,7 @@ export default function HomeScreen() {
         ref={propertiesRef}
         data={properties}
         ListHeaderComponent={() => <Discovery />}
-        renderItem={({ item }) => (<Card property={item} />)}
+        renderItem={({ item }) => (<HomeCard property={item} />)}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         onEndReached={() => {

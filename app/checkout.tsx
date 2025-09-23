@@ -1,85 +1,12 @@
+import { Container, Header, Icon, ImageWithSquircle, Text } from '@/components';
+import { PRIMARY } from '@/core/theme/color';
+import { useCheckoutLogic } from '@/hooks/app/use-checkout-logic';
+import { format } from 'date-fns';
+import { SquircleButton, SquircleView } from 'expo-squircle-view';
 import { ActivityIndicator, ScrollView, View } from 'react-native';
 
-import { Container, Header, Text } from '@/components';
-import ImageWithSquircle from '@/components/home/image-with-squircle';
-import Icon from '@/components/Icon';
-import { client } from '@/core/api/client';
-import useShoppingCartStore from '@/core/store';
-import { PRIMARY } from '@/core/theme/color';
-import { useStripe } from '@stripe/stripe-react-native';
-import { format } from 'date-fns';
-import { router } from 'expo-router';
-import { SquircleButton, SquircleView } from 'expo-squircle-view';
-import { useState } from 'react';
-import { toast } from 'sonner-native';
-
-interface BookingRequest {
-  property_id: string;
-  check_in: string | Date;
-  check_out: string | Date;
-  guest_count: number;
-  special_requests: string;
-}
-
-const formattedDate = (date: Date): string => {
-  return format(date, "yyyy-MM-dd'T'HH:mm:ss'Z'");
-};
-
 const Checkout = () => {
-  const { initPaymentSheet, presentPaymentSheet } = useStripe();
-  const { item, getTotalPrice } = useShoppingCartStore()
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onSubmit = async () => {
-    try {
-      if (!item) return;
-
-      setIsLoading(true);
-
-      const bookingData: BookingRequest = {
-        property_id: item.product,
-        check_in: formattedDate(item.startDate as Date),
-        check_out: formattedDate(item.endDate as Date),
-        guest_count: 1,
-        special_requests: '',
-      };
-
-      const { data } = await client.post<{
-        customerID: string;
-        booking_id: string;
-        ephemeralKey: string;
-        clientSecret: string;
-        paymentIntent: string;
-      }>('/bookings', bookingData);
-
-      const { error } = await initPaymentSheet({
-        merchantDisplayName: 'holidays',
-        customerId: data.customerID,
-        customerEphemeralKeySecret: data.ephemeralKey,
-        paymentIntentClientSecret: data.paymentIntent,
-        allowsDelayedPaymentMethods: true,
-        returnURL: 'holidays://checkout',
-      });
-
-      if (error) {
-        console.log('error');
-        setIsLoading(false);
-      }
-
-      const { error: paymentSheetError } = await presentPaymentSheet();
-
-      if (paymentSheetError) {
-        console.log('Error: ', paymentSheetError);
-      } else {
-        console.log('payment successful');
-        toast.success('Payment successful');
-        router.push('/payment-successful');
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
+  const { item, getTotalPrice, isLoading, onSubmit } = useCheckoutLogic()
 
   if (!item) {
     return (

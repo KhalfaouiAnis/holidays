@@ -1,4 +1,4 @@
-import { Text } from "@/components"
+import { Icon, ImageWithSquircle, Text } from "@/components"
 import { PAGE_SIZE } from "@/core/api/common"
 import useFeaturedProperties from "@/core/api/feature/properties/use-featured-properties"
 import { PRIMARY } from "@/core/theme/color"
@@ -6,8 +6,6 @@ import { BlurView } from "expo-blur"
 import { router } from "expo-router"
 import { SquircleView } from "expo-squircle-view"
 import { ActivityIndicator, FlatList, Pressable, RefreshControl, View } from "react-native"
-import Icon from "../Icon"
-import ImageWithSquircle from "./image-with-squircle"
 
 const Discovery = () => {
     const { featuredProperties, isFetchingNextPage, isRefetching, hasNextPage, fetchNextPage, isPending, refetch } = useFeaturedProperties({ pageSize: PAGE_SIZE })
@@ -26,7 +24,7 @@ const Discovery = () => {
             <Pressable onPress={() => router.navigate("/search")}>
                 <View className='mx-4 rounded-xl bg-gray-100 px-4 py-3 flex flex-row items-center justify-center mb-4'>
                     <View className='flex flex-row items-center justify-center py-3'>
-                        <Icon name="search" size={20} />
+                        <Icon name="search" size={20} color="#030712" />
                         <Text className="ml-2 flex-1 dark:text-gray-950">Where to go?</Text>
                     </View>
                 </View>

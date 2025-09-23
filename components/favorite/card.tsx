@@ -1,7 +1,7 @@
 import { Image } from "@/components";
 import { BlurView } from "expo-blur";
 import { View } from "react-native";
-import Icon from "../Icon";
+import Icon from "../shared/Icon";
 
 type CardProps = {
     property: Property

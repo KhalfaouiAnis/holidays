@@ -8,11 +8,9 @@ export const client = axios.create({
 client.interceptors.request.use(
   (config) => {
     const data = getToken();
-
     if (data?.access) {
       config.headers["Authorization"] = data.access;
     }
-
     return config;
   },
   (error) => {
@@ -20,8 +18,7 @@ client.interceptors.request.use(
     if (error.response && error.response.status === 401) {
       signOut();
     }
-
-    return Promise.reject();
+    return Promise.reject(error);
   }
 );
 
@@ -32,7 +29,6 @@ client.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       signOut();
     }
-
-    return Promise.reject();
+    return Promise.reject(error);
   }
 );

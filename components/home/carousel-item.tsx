@@ -1,23 +1,15 @@
 import { Image } from "@/components";
 import { WIDTH } from "@/core/utils/layout";
-import { useRef } from "react";
 import { View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
-import Carousel, { ICarouselInstance, Pagination } from "react-native-reanimated-carousel";
+import Carousel, { Pagination } from "react-native-reanimated-carousel";
+import { useCarouselItem } from "./logic/use-carousel-item";
 
 type CarouselProps = {
     property: Property;
 }
 
 const CarouselItem = ({ property }: CarouselProps) => {
-    const progressValue = useSharedValue<number>(0)
-    const carouselRef = useRef<ICarouselInstance>(null)
-
-    const onPressPagination = (index: number) => {
-        if (carouselRef.current) {
-            carouselRef.current.scrollTo({ index, animated: true })
-        }
-    }
+    const { carouselRef, progressValue, onPressPagination, dotStyle, activeDotStyle } = useCarouselItem()
 
     return (
         <View>
@@ -43,20 +35,8 @@ const CarouselItem = ({ property }: CarouselProps) => {
                     onPress={onPressPagination}
                     data={property.images.map(_property => ({ color: _property }))}
                     progress={progressValue}
-                    activeDotStyle={{
-                        width: 16,
-                        height: 8,
-                        borderRadius: 4,
-                        marginHorizontal: 4,
-                        backgroundColor: 'white'
-                    }}
-                    dotStyle={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 4,
-                        marginHorizontal: 4,
-                        backgroundColor: '#F3EFE9'
-                    }}
+                    activeDotStyle={activeDotStyle}
+                    dotStyle={dotStyle}
                     containerStyle={{
                         paddingVertical: 8
                     }}

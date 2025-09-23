@@ -1,34 +1,12 @@
-import { Container, Header, LoadingIndicator, Text } from "@/components"
-import ImageWithSquircle from "@/components/home/image-with-squircle"
-import Icon from "@/components/Icon"
-import { client } from "@/core/api/client"
-import useAuth from "@/core/auth"
-import { useQuery } from "@tanstack/react-query"
+import { Container, Header, Icon, ImageWithSquircle, LoadingIndicator, Text } from "@/components"
+import { useProfileLogic } from "@/hooks/app/use-profile-logic"
 import { useFocusEffect } from "expo-router"
 import { SquircleView } from "expo-squircle-view"
 import { useCallback } from "react"
 import { View } from "react-native"
 
-type UserStat = {
-    email: string,
-    name: string,
-    username: string,
-    avatar: string,
-    favoriteCount: number,
-    bookingsCount: number
-}
-
 const Profile = () => {
-
-    const { signOut, user } = useAuth()
-
-    const { data, isLoading, refetch } = useQuery<UserStat>({
-        queryKey: ["stats"],
-        queryFn: async () => {
-            const { data } = await client.get("/users/stats")
-            return data.stats
-        }
-    })
+    const { signOut, user, data, isLoading, refetch } = useProfileLogic()
 
     useFocusEffect(
         useCallback(() => {
