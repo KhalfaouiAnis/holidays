@@ -1,5 +1,6 @@
 import { Text } from "@/components";
 import { useToggleFavorite } from "@/hooks/use-toggle-favorite";
+import { useToggleRate } from "@/hooks/use-toggle-rate";
 import { BlurView } from "expo-blur";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
@@ -12,15 +13,24 @@ type CardProps = {
 }
 
 const Card = ({ property }: CardProps) => {
-    const onSuccess = () => toast.success("Added to favories")
-    const onFailure = () => toast.error("Failed to add to favories")
+    const onFavoriteSuccess = () => toast.success("Added to favories")
+    const onFavoriteFailure = () => toast.error("Failed to add to favories")
 
-    const togglefavorite = useToggleFavorite(onSuccess, onFailure);
+    const onRateSettled = () => toast.success("Rate considered, thank you")
 
-    const onToggleHandler = () => {
+    const togglefavorite = useToggleFavorite(onFavoriteSuccess, onFavoriteFailure);
+    const toggleRate = useToggleRate(onRateSettled)
+
+    const toggleFavoriteHandler = () => {
         togglefavorite.mutate({
             propertyId: property.id,
             currentFavoriteStatus: property.is_favorite,
+        })
+    }
+
+    const toggleRateHandler = () => {
+        toggleRate.mutate({
+            propertyId: property.id,
         })
     }
 
@@ -39,12 +49,13 @@ const Card = ({ property }: CardProps) => {
                 <CarouselItem property={property} />
             </Pressable>
             <View>
-                <BlurView intensity={100} className="absolute bottom-4 left-8 flex flex-row p-2 rounded-2xl overflow-hidden">
-                    <Icon name="star" size={24} />
-                    <Text className="mx-2">5</Text>
-                </BlurView>
-
-                <Pressable className="absolute bottom-4 right-8" onPress={onToggleHandler} >
+                <Pressable onPress={toggleRateHandler} className="absolute bottom-4 left-8" >
+                    <BlurView intensity={100} className="flex flex-row p-2 rounded-2xl overflow-hidden">
+                        <Icon name="star" size={24} />
+                        <Text className="mx-2">{property.rating}</Text>
+                    </BlurView>
+                </Pressable>
+                <Pressable className="absolute bottom-4 right-8" onPress={toggleFavoriteHandler} >
                     <BlurView className="p-2 rounded-2xl overflow-hidden">
                         <Icon
                             name={property.is_favorite ? "heart" : "heart-outline"}

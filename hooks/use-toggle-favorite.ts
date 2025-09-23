@@ -77,7 +77,7 @@ export const useToggleFavorite = (
     onSettled: (data, error, variables, context) => {
       if (context?.queryKey) {
         queryClient.invalidateQueries({
-          queryKey: context.queryKey,
+          queryKey: ["properties", PAGE_SIZE],
         });
       }
     },

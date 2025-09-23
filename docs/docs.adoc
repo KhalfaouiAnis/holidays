@@ -3,3 +3,9 @@ connect local api server running on port 4000 to device:
         emulator-5554   device <--- emulator
         2681523e        device <-- real device
     adb -s emulator-5554 reverse tcp:4000 tcp:4000
+
+Stripe test card inputs
+424242...
+12/34/
+567
+12345

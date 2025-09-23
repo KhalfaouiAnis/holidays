@@ -24,7 +24,6 @@ export default function HomeScreen() {
     <Container>
       <MainHeader />
       <FlatList
-        className=""
         ref={propertiesRef}
         data={properties}
         ListHeaderComponent={() => <Discovery />}

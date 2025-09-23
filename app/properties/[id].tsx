@@ -2,10 +2,12 @@ import { Container, Header, LoadingIndicator, Text } from '@/components';
 import Icon from '@/components/Icon';
 import AmenitiesList from '@/components/property/amenities-list';
 import PropertyImage from '@/components/property/property-image';
+import { Colors } from '@/constants/theme';
 import useProperty from '@/core/api/feature/properties/useProperty';
 import useShoppingCartStore from '@/core/store';
 import { calendarTheme } from '@/core/theme/calendar-theme';
 import { PRIMARY } from '@/core/theme/color';
+import { useColorScheme } from '@/hooks/use-color-scheme.web';
 import BottomSheet, { BottomSheetBackdrop, BottomSheetBackdropProps, BottomSheetView } from '@gorhom/bottom-sheet';
 import { Calendar, fromDateId, toDateId, useDateRange } from "@marceloterreiro/flash-calendar";
 import { addMonths, differenceInDays, isBefore, isSameMonth, startOfMonth, subMonths } from 'date-fns';
@@ -20,15 +22,11 @@ const Property = () => {
     const { id } = useLocalSearchParams();
     const today = toDateId(new Date())
     const [calendarMonthId, setCalendarMonthId] = useState(today)
-
+    const colorScheme = useColorScheme();
     const { property, isLoading } = useProperty(id)
-
     const { addItem } = useShoppingCartStore()
-
     const { calendarActiveDateRanges, onCalendarDayPress } = useDateRange()
-
     const bottomSheetRef = useRef<BottomSheet>(null)
-
     const snapPoints = useMemo(() => ['70%'], [])
 
     const renderBackdrop = useCallback((props: BottomSheetBackdropProps) => (
@@ -116,9 +114,9 @@ const Property = () => {
     return (
         <Container>
             <Header title='Property' />
-            <ScrollView className='bg-gray-100 p-4'>
+            <ScrollView className='p-4'>
                 <PropertyImage
-                    rating={2}
+                    rating={property.rating}
                     imageUrl={property?.images[0]}
                     isFavorite={property?.is_favorite}
                 />
@@ -155,23 +153,23 @@ const Property = () => {
                 enablePanDownToClose
                 enableDynamicSizing={false}
             >
-                <BottomSheetView style={{ flex: 1, position: "relative" }}>
-                    <View className="my-4 flex flex-row items-center justify-between px-4">
-                        <View className="flex flex-row items-center justify-center">
-                            <Icon name="wallet" size={24} />
-                            <Text variant="subtitle-primary" className="mx-4">
-                                Price: ${hasSelectedDates ? totalPrice : property.price_per_night}
-                                {!hasSelectedDates && ' per night'}
-                            </Text>
+                <BottomSheetView style={{ flex: 1, position: "relative", }}>
+                    <BottomSheetView style={{ flex: 1, paddingHorizontal: 4, backgroundColor: Colors[colorScheme ?? "light"].background }}>
+                        <View className="my-4 flex flex-row items-center justify-between px-4">
+                            <View className="flex flex-row items-center justify-center">
+                                <Icon name="wallet" size={24} />
+                                <Text variant="subtitle-primary" className="mx-4">
+                                    Price: ${hasSelectedDates ? totalPrice : property.price_per_night}
+                                    {!hasSelectedDates && ' per night'}
+                                </Text>
+                            </View>
                         </View>
-                    </View>
-                    <BottomSheetView style={{ flex: 1, paddingHorizontal: 4 }}>
-                        <View className="mt-20 flex flex-row justify-between">
+                        <View className=" flex flex-row justify-between">
                             <Pressable
                                 onPress={previousMonth}
                                 disabled={!canGoBack}
                             >
-                                <Icon name="arrow-back" disabled={!canGoBack} size={40} />
+                                <Icon name="arrow-back" disabled={!canGoBack} size={24} />
                             </Pressable>
                             <Pressable onPress={nextMonth}>
                                 <Icon name="arrow-forward" size={24} />
@@ -183,6 +181,7 @@ const Property = () => {
                             calendarMinDateId={today}
                             onCalendarDayPress={handleCalendarDayPress}
                             theme={calendarTheme}
+                        // calendarColorScheme={colorScheme}
                         />
                     </BottomSheetView>
                     <SquircleButton
@@ -194,9 +193,10 @@ const Property = () => {
                         style={{
                             paddingVertical: 16,
                             position: 'absolute',
-                            bottom: -400,
+                            bottom: -450,
                             left: 0,
                             right: 0,
+
                         }}
                     >
                         <Icon name="checkmark-circle" size={20} />

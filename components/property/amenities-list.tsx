@@ -25,7 +25,6 @@ type Props = {
 };
 
 const AmenitiesList = ({ amenitites }: Props) => {
-
     const allAmenities = amenitites.split(",") as AmenityType[]
 
     return (
@@ -33,7 +32,7 @@ const AmenitiesList = ({ amenitites }: Props) => {
             {
                 allAmenities.map((amenity, index) => {
                     return (
-                        <View key={index} className="mx-2 flex flex-1 items-center justify-center rounded-2xl bg-white p-2" >
+                        <View key={index} className="mx-2 flex flex-1 items-center justify-center rounded-2xl dark:bg-slate-900 bg-slate-100 p-2" >
                             <Icon name={amenityIcon[amenity]} size={24} />
                             <Text variant="body-primary" className="mt-2 text-center">
                                 {amenity}

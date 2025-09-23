@@ -8,11 +8,11 @@ import Icon from '../Icon';
 
 type Props = {
     imageUrl: string,
-    rating: number,
+    rating?: number,
     isFavorite: boolean
 };
 
-const PropertyImage = ({ imageUrl, rating = 5, isFavorite }: Props) => {
+const PropertyImage = ({ imageUrl, rating = 0, isFavorite }: Props) => {
     return (
         <View className='relative'>
             <View className='flex flex-row items-center justify-center'>
