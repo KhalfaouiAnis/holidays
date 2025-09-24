@@ -1,5 +1,7 @@
+import { PRIMARY } from '@/core/theme/color';
 import { Image } from 'expo-image';
 import { View } from "react-native";
+import Icon from '../shared/Icon';
 
 const MainHeader = () => {
     return (
@@ -12,6 +14,7 @@ const MainHeader = () => {
                         width: 80
                     }}
                 />
+                <Icon name='notifications' size={20} color={PRIMARY} />
             </View>
         </View>
     )

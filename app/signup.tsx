@@ -40,13 +40,13 @@ const Signup = () => {
                     <Text variant='subtitle-primary' className='text-center mt-2'>Let&apos;s get started</Text>
 
                     <TextInput
-                        className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Name'
+                        className='mt-4 rounded-xl text-white bg-violet-300 px-4 py-6 text-xl' placeholder='Name'
                         value={name}
                         onChangeText={handleNameChange}
                         autoCapitalize='none'
                     />
                     <TextInput
-                        className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Email'
+                        className='mt-4 rounded-xl text-white bg-violet-300 px-4 py-6 text-xl' placeholder='Email'
                         value={email} onChangeText={handleEmailChange}
                         autoCapitalize='none'
                         textContentType='emailAddress'
@@ -56,11 +56,11 @@ const Signup = () => {
                         value={password} onChangeText={handlePasswordChange}
                         autoCapitalize='none'
                         textContentType='password'
-                        className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Password'
+                        className='mt-4 rounded-xl text-white bg-violet-300 px-4 py-6 text-xl' placeholder='Password'
                     />
 
                     <SquircleButton
-                        className='mt-auto'
+                        className='mt-auto mb-6'
                         preserveSmoothing
                         cornerSmoothing={100}
                         borderRadius={16}

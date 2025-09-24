@@ -27,6 +27,7 @@ const Login = () => {
                 <View className="flex-1 px-4">
                     <View className="flex flex-row items-center justify-center mt-24">
                         <Image source={require("../assets/images/holidays.svg")}
+                            contentFit='contain'
                             style={{
                                 height: 40,
                                 width: 176
@@ -35,7 +36,7 @@ const Login = () => {
                     </View>
                     <Text variant='subtitle-primary' className='text-center mt-2 mb-16'>Welcome back</Text>
                     <TextInput
-                        className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Email'
+                        className='mt-4 rounded-xl text-white bg-violet-300 px-4 py-6 text-xl' placeholder='Email'
                         value={email} onChangeText={setEmail}
                         textContentType='emailAddress'
                         autoCapitalize='none'
@@ -45,10 +46,10 @@ const Login = () => {
                         autoCapitalize='none'
                         textContentType='password'
                         value={password} onChangeText={setPassword}
-                        className='mt-4 rounded-xl bg-gray-100 px-4 py-6 text-xl' placeholder='Password'
+                        className='mt-4 rounded-xl text-white bg-violet-300 px-4 py-6 text-xl' placeholder='Password'
                     />
                     <SquircleButton
-                        className='mt-auto'
+                        className='mt-auto mb-6'
                         preserveSmoothing
                         cornerSmoothing={100}
                         borderRadius={16}
