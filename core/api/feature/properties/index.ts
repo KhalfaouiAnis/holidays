@@ -20,5 +20,5 @@ export const listFeaturedProperties = async (
     `/properties/featured?page=${page}&pageSize=${pageSize}`
   );
 
-  return data
+  return data;
 };

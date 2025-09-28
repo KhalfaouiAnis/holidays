@@ -1,1 +1,15 @@
+export enum NotificationType {
+  BROADCAST = "BROADCAST",
+  USER_BOOKING = "USER_BOOKING",
+  NOTIFICATION_READ = "NOTIFICATION_READ",
+}
 
+export enum BookingStatus {
+  IN_PROGRESS = "IN_PROGRESS",
+  CANCELED = "CANCELED",
+  ACCEPTED = "ACCEPTED",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+}
+
+export const WS_URL = process.env.EXPO_PUBLIC_WS_URL!;

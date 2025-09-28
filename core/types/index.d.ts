@@ -26,6 +26,7 @@ interface User {
   created_at: string;
   username: string;
   email: string;
+  role: string;
   avatar: string;
   properties: Property[] | null;
   bookings: Booking[] | null;
@@ -75,3 +76,35 @@ type PaginationParams = {
   page: number;
   pageSize: number;
 };
+
+type INotificationItem = {
+  id: string;
+  type: NotificationType;
+  createdAt: string;
+  message: string;
+  title?: string;
+  isRead?: boolean;
+  readAt?: string;
+};
+
+type NotificationBroadcastMessage = {
+  id: string;
+  title?: string;
+  message: string;
+  createdAt: string;
+  type: NotificationType;
+};
+
+type UserNotificationItem = {
+  id: string;
+  userId: string;
+  readAt: string;
+  isRead: boolean;
+  notification: Partial<NotificationBroadcastMessage>;
+};
+
+enum NotificationType {
+  BROADCAST = "BROADCAST",
+  USER_BOOKING = "USER_BOOKING",
+  NOTIFICATION_READ = "NOTIFICATION_READ",
+}

@@ -49,6 +49,7 @@ const useAuth = create<AuthState>()(
 
 export default useAuth;
 
-export const getToken = () => useAuth.getState().token;
+export const getToken = () => useAuth.getState().token?.access;
+export const getUserId = () => useAuth.getState().user?.id;
 export const signOut = () => useAuth.getState().signOut();
 export const hydrateAuth = () => useAuth.getState().hydrate();

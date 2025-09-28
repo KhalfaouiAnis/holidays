@@ -1,9 +1,12 @@
 import { client } from "@/core/api/client";
 import useAuth from "@/core/auth";
+import { WS_URL } from "@/core/constants";
+import { useWebSocketStore } from "@/core/store";
 import { AxiosError, isAxiosError } from "axios";
 import { router } from "expo-router";
 import { useState } from "react";
 import { toast } from "sonner-native";
+import { useShallow } from "zustand/shallow";
 
 export const useSignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -65,7 +68,8 @@ export const useSignUp = () => {
   };
 };
 
-export const useLogin = () => {
+export const useLoginLogic = () => {
+  const connect = useWebSocketStore(useShallow((state) => state.connect));
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -78,12 +82,13 @@ export const useLogin = () => {
     }
     setLoading(true);
     try {
-      const resqonse = await client.post("users/login", {
+      const { data } = await client.post("users/login", {
         email,
         password,
       });
-      setUser(resqonse.data.user);
-      signIn({ access: resqonse.data.token });
+      setUser(data.user);
+      signIn({ access: data.token });
+      connect(`${WS_URL}?token=${encodeURIComponent(data.token)}`);
       setLoading(false);
       router.push("/");
     } catch (error) {

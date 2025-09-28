@@ -1,6 +1,6 @@
 import { Container, Header, Text } from '@/components';
 import { PRIMARY } from '@/core/theme/color';
-import { useLogin } from '@/hooks/app/use-auth-logic';
+import { useLoginLogic } from '@/hooks/app/use-auth-logic';
 import { Image } from 'expo-image';
 import { SquircleButton } from 'expo-squircle-view';
 import { ActivityIndicator, TextInput, View } from 'react-native';
@@ -14,7 +14,7 @@ const Login = () => {
         setEmail,
         setPassword,
         handleLogin,
-    } = useLogin()
+    } = useLoginLogic()
 
     return (
         <Container>

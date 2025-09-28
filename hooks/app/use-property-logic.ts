@@ -1,18 +1,18 @@
 import useProperty from "@/core/api/feature/properties/useProperty";
-import useShoppingCartStore from "@/core/store";
+import { useShoppingCartStore } from "@/core/store";
 import BottomSheet from "@gorhom/bottom-sheet";
 import {
-    fromDateId,
-    toDateId,
-    useDateRange,
+  fromDateId,
+  toDateId,
+  useDateRange,
 } from "@marceloterreiro/flash-calendar";
 import {
-    addMonths,
-    differenceInDays,
-    isBefore,
-    isSameMonth,
-    startOfMonth,
-    subMonths,
+  addMonths,
+  differenceInDays,
+  isBefore,
+  isSameMonth,
+  startOfMonth,
+  subMonths,
 } from "date-fns";
 import { useLocalSearchParams } from "expo-router";
 import { nanoid } from "nanoid/non-secure";

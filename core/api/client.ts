@@ -7,15 +7,15 @@ export const client = axios.create({
 
 client.interceptors.request.use(
   (config) => {
-    const data = getToken();
-    if (data?.access) {
-      config.headers["Authorization"] = data.access;
+    const token = getToken();
+    if (token) {
+      config.headers["Authorization"] = token;
     }
     return config;
   },
   (error) => {
     console.log({ error });
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 || error.response.status === 403) {
       signOut();
     }
     return Promise.reject(error);
@@ -26,7 +26,7 @@ client.interceptors.response.use(
   (response) => response,
   (error) => {
     console.log({ error });
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.response.status === 401 || error.response.status === 403) {
       signOut();
     }
     return Promise.reject(error);

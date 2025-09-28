@@ -1,5 +1,5 @@
 import { client } from "@/core/api/client";
-import useShoppingCartStore from "@/core/store";
+import { useShoppingCartStore } from "@/core/store";
 import { formattedDate } from "@/core/utils/dates";
 import { useStripe } from "@stripe/stripe-react-native";
 import { AxiosError, isAxiosError } from "axios";

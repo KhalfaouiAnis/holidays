@@ -1,4 +1,5 @@
 import { Container, Discovery, HomeCard, LoadingIndicator, MainHeader } from "@/components";
+import { NoContentView } from "@/components/shared/no-content-view";
 import { PAGE_SIZE } from "@/core/api/common";
 import useProperties from "@/core/api/feature/properties/use-properties";
 import { PRIMARY } from "@/core/theme/color";
@@ -16,6 +17,10 @@ export default function HomeScreen() {
     return null
   }
 
+  const ListEmptyComponent = () => (
+    <NoContentView title="Places" subtitle="No items found" content="Places and destinations for holidays will be shown here." />
+  )
+
   return (
     <Container>
       <MainHeader />
@@ -32,6 +37,7 @@ export default function HomeScreen() {
           }
         }}
         ListFooterComponent={ListFooterComponent}
+        ListEmptyComponent={ListEmptyComponent}
         onEndReachedThreshold={0.5}
         refreshControl={<RefreshControl onRefresh={refetch} refreshing={isRefetching} colors={[PRIMARY]} />}
       />

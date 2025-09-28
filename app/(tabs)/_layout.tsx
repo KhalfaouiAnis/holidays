@@ -4,15 +4,25 @@ import React, { useCallback, useEffect } from 'react';
 import { TabBarIcon } from '@/components';
 import { Colors } from '@/constants/theme';
 import useAuth from '@/core/auth';
+import { initializeWebSocket, useWebSocketStore } from '@/core/store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useShallow } from "zustand/shallow";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { status } = useAuth()
+  const { unreadCount } = useWebSocketStore(useShallow((state) => state));
+  const { status, token } = useAuth()
+  
 
   const hideSplash = useCallback(async () => {
     await SplashScreen.hideAsync()
   }, [])
+
+  useEffect(() => {
+    if (token?.access) {
+      initializeWebSocket()
+    }
+  }, [token?.access])
 
   useEffect(() => {
     let timeout: number;
@@ -39,9 +49,7 @@ export default function TabLayout() {
           backgroundColor: Colors[colorScheme ?? "light"].background,
         },
         headerShown: false,
-        tabBarShowLabel: false,
-        
-        
+        tabBarShowLabel: true,
       }}>
       <Tabs.Screen
         name="index"
@@ -62,6 +70,14 @@ export default function TabLayout() {
         options={{
           title: 'Bookings',
           tabBarIcon: ({ color }) => <TabBarIcon name="calendar-clear" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
+        options={{
+          title: 'Notifications',
+          tabBarBadge: unreadCount > 0 ? unreadCount : undefined,
+          tabBarIcon: ({ color }) => <TabBarIcon name="notifications" color={color} />,
         }}
       />
       <Tabs.Screen
