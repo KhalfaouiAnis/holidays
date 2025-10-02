@@ -1,10 +1,10 @@
 import { Redirect, SplashScreen, Tabs } from 'expo-router';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 
 import { TabBarIcon } from '@/components';
 import { Colors } from '@/constants/theme';
 import useAuth from '@/core/auth';
-import { initializeWebSocket, useWebSocketStore } from '@/core/store';
+import { useWebSocketStore } from '@/core/store';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useShallow } from "zustand/shallow";
 
@@ -18,23 +18,23 @@ export default function TabLayout() {
     await SplashScreen.hideAsync()
   }, [])
 
-  useEffect(() => {
-    if (token?.access) {
-      initializeWebSocket()
-    }
-  }, [token?.access])
+  // useEffect(() => {
+  //   if (token?.access) {
+  //     initializeWebSocket()
+  //   }
+  // }, [token?.access])
 
-  useEffect(() => {
-    let timeout: number;
-    if (status !== "idle") {
-      timeout = setTimeout(() => {
-        hideSplash()
-      }, 1000);
-    }
-    return () => {
-      timeout && clearTimeout(timeout);
-    }
-  }, [status, hideSplash])
+  // useEffect(() => {
+  //   let timeout: number;
+  //   if (status !== "idle") {
+  //     timeout = setTimeout(() => {
+  //       hideSplash()
+  //     }, 1000);
+  //   }
+  //   return () => {
+  //     timeout && clearTimeout(timeout);
+  //   }
+  // }, [status, hideSplash])
 
   if (status === "idle" || status === "signOut") {
     return <Redirect href="/welcome" />

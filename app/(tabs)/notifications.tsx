@@ -6,17 +6,8 @@ import useUserNotifications from "@/core/api/feature/notifications/use-user-noti
 import { getUserId } from "@/core/auth"
 import { useWebSocketStore } from "@/core/store"
 import { PRIMARY } from "@/core/theme/color"
-import { usePathname } from "expo-router"
 import { FlatList, RefreshControl } from "react-native"
 import { useShallow } from "zustand/shallow"
-
-// const today = addMinutes(new Date().toDateString(), 30).toDateString();
-
-// const notifications: INotificationItem[] = [
-//     { id: "1", createdAt: today, message: "message content goes here", type: NotificationType.USER_BOOKING, title: "Bookings", isRead: false },
-//     { id: "2", createdAt: today, message: "message content goes here", type: NotificationType.USER_BOOKING, title: "Bookings", isRead: true, readAt: today },
-//     { id: "3", createdAt: today, message: "message content goes here", type: NotificationType.USER_BOOKING, title: "Bookings", isRead: true, readAt: today },
-// ]
 
 const Notifications = () => {
     const userId = getUserId()
@@ -48,10 +39,6 @@ const Notifications = () => {
             fetchNextPage()
         }
     }
-
-      const pathname = usePathname()
-      console.log("pathname: ", pathname)
-    
 
     return (
         <Container>

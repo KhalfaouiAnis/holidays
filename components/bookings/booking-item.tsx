@@ -84,6 +84,24 @@ const BookingItem = ({ booking }: Props) => {
                             </Text>
                         </View>
                     </View>
+                    <View className='mt-2 flex flex-row justify-between'>
+                        <View>
+                            <Text className='text-white' variant='body'>
+                                Booking status
+                            </Text>
+                            <Text className='text-white' variant='body'>
+                                {booking.status?.toLowerCase()}
+                            </Text>
+                        </View>
+                        <View>
+                            <Text className='text-white' variant='body'>
+                                Payment status
+                            </Text>
+                            <Text className='text-white' variant='body'>
+                                {booking.payment_status?.toLowerCase()}
+                            </Text>
+                        </View>
+                    </View>
                 </SquircleView>
             </SquircleView>
         </View>
